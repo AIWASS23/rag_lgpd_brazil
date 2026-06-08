@@ -45,11 +45,23 @@ class SemanticCache:
                 base_url="https://generativelanguage.googleapis.com/v1beta/openai/",
             )
             self._embed_model = os.environ.get("EMBED_MODEL", "gemini-embedding-001")
+            self._use_st = False
+        elif "OPENAI_API_KEY" in os.environ:
+            self._client = OpenAI(api_key=os.environ["OPENAI_API_KEY"])
+            self._embed_model = os.environ.get("EMBED_MODEL", "text-embedding-3-small")
+            self._use_st = False
         else:
-            self._client = OpenAI()
-            self._embed_model = "text-embedding-3-small"
+            # HuggingFace ou fallback: embedding local via sentence-transformers
+            from sentence_transformers import SentenceTransformer
+            model_name = os.environ.get("EMBED_MODEL", "sentence-transformers/all-MiniLM-L6-v2")
+            self._st_model = SentenceTransformer(model_name)
+            self._client = None
+            self._embed_model = model_name
+            self._use_st = True
 
     def _embed(self, text: str) -> np.ndarray:
+        if self._use_st:
+            return np.array(self._st_model.encode(text))
         r = self._client.embeddings.create(model=self._embed_model, input=text)
         return np.array(r.data[0].embedding)
 

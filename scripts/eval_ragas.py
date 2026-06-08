@@ -86,10 +86,11 @@ def _build_ragas_embeddings():
         from ragas.embeddings import LangchainEmbeddingsWrapper
         return LangchainEmbeddingsWrapper(OpenAIEmbeddings(model="text-embedding-3-small"))
 
-    # HuggingFace: usa modelo local via sentence-transformers (nativo no RAGAS)
-    from ragas.embeddings import HuggingfaceEmbeddings
+    # HuggingFace: embedding local via sentence-transformers + wrapper LangChain
+    from langchain_huggingface import HuggingFaceEmbeddings
+    from ragas.embeddings import LangchainEmbeddingsWrapper
     model_name = os.environ.get("EMBED_MODEL", "sentence-transformers/all-MiniLM-L6-v2")
-    return HuggingfaceEmbeddings(model_name=model_name)
+    return LangchainEmbeddingsWrapper(HuggingFaceEmbeddings(model_name=model_name))
 
 
 # ---------------------------------------------------------------------------

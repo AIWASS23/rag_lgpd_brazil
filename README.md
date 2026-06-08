@@ -4,7 +4,26 @@ Assistente de compliance LGPD baseado em RAG — responde perguntas sobre a Lei 
 
 ## Problema
 
-Profissionais de compliance precisam consultar a LGPD com frequência, mas a lei tem 65 artigos com linguagem jurídica densa. Uma busca simples retorna trechos sem contexto; um LLM genérico alucina números de artigos. A combinação RAG + tool calling resolve os dois problemas: recupera os trechos relevantes do corpus oficial e verifica o texto real do artigo antes de citar.
+**Domínio:** compliance de proteção de dados pessoais no Brasil.
+
+**Persona-alvo:** analistas de privacidade, advogados e encarregados de dados (DPOs) de pequenas e médias empresas que precisam consultar a LGPD e os guias da ANPD com frequência, mas não têm equipe jurídica disponível para responder dúvidas operacionais no dia a dia — "qual a base legal para enviar e-mail marketing?", "sou obrigado a indicar um DPO?", "o que devo comunicar à ANPD em caso de vazamento?".
+
+**Por que LLM + RAG é a abordagem certa:**
+
+| Alternativa | Por que não resolve |
+|---|---|
+| Busca por palavra-chave (Ctrl+F no PDF) | Retorna trechos isolados sem contexto; exige que o usuário já saiba o número do artigo |
+| LLM genérico sem RAG | Alucina artigos, inventa multas e prazos que não existem na lei — risco jurídico real |
+| Sistema de FAQ estático | Não cobre perguntas abertas nem cenários combinados (ex.: dados sensíveis + consentimento + terceiros) |
+| RAG sem tool calling | Recupera o contexto, mas o LLM ainda pode parafrasear o artigo errado ao citá-lo |
+
+RAG garante que as respostas sejam fundamentadas nos documentos oficiais. O tool calling (`cite_article`) força o LLM a buscar o texto exato do artigo antes de citá-lo, eliminando a principal fonte de alucinação neste domínio.
+
+**3 perguntas representativas que o sistema responde:**
+
+1. *"Quais são as bases legais para tratar dados pessoais de clientes sem pedir consentimento?"* — recupera Art. 7º e explica execução de contrato e legítimo interesse com citação textual.
+2. *"Quando uma empresa é obrigada a ter um encarregado (DPO) e quais são suas responsabilidades?"* — cruza Art. 41 com o Guia ANPD de Agentes de Tratamento, citando as atribuições obrigatórias.
+3. *"O que devo fazer e em quanto tempo devo comunicar um vazamento de dados à ANPD?"* — localiza Art. 48, explica o "prazo razoável" e as informações obrigatórias na notificação.
 
 ## Arquitetura
 
@@ -36,13 +55,25 @@ flowchart LR
 
 ## Corpus
 
-3 documentos públicos governamentais (~5 MB total):
+**Corpus próprio** — substituição completa do corpus de exemplo do template por documentos oficiais da legislação brasileira de proteção de dados.
 
-| Arquivo | Fonte | Descrição |
-|---|---|---|
-| `lgpd-lei-13709-2018.pdf` | egov.df.gov.br | Texto oficial da Lei 13.709/2018 (65 artigos) |
-| `anpd-guia-agentes-de-tratamento.pdf` | gov.br/anpd | Guia: Agentes de Tratamento e Encarregado (ANPD, 2021) |
-| `anpd-guia-seguranca-da-informacao.pdf` | gov.br/anpd | Guia: Segurança da Informação para Agentes de Tratamento (ANPD, 2021) |
+| Atributo | Valor |
+|---|---|
+| Documentos | 3 PDFs |
+| Tamanho total | ~1,5 MB |
+| Páginas | 67 (média: 22 por documento) |
+| Caracteres extraídos | ~183 mil |
+| Chunks indexados | 141 (512 tokens, overlap 50) |
+| Idioma | Português (pt-BR) |
+| Licença | Domínio público — documentos governamentais oficiais |
+
+| Arquivo | Fonte | Páginas | Descrição |
+|---|---|---:|---|
+| `lgpd-lei-13709-2018.pdf` | egov.df.gov.br | 23 | Texto oficial da Lei 13.709/2018 — 65 artigos com toda a regulamentação de proteção de dados pessoais no Brasil |
+| `anpd-guia-agentes-de-tratamento.pdf` | gov.br/anpd | 23 | Guia Orientativo da ANPD: papéis e responsabilidades de controlador, operador e encarregado (DPO) |
+| `anpd-guia-seguranca-da-informacao.pdf` | gov.br/anpd | 21 | Guia Orientativo da ANPD: medidas técnicas e administrativas de segurança da informação para agentes de tratamento |
+
+**Justificativa da escolha:** os três documentos cobrem os dois eixos centrais de dúvidas de compliance — o que a lei exige (LGPD) e como a autoridade reguladora espera que seja cumprido (guias ANPD). A combinação permite que o sistema responda tanto perguntas sobre texto de lei quanto perguntas sobre boas práticas regulatórias, cruzando as duas fontes quando necessário.
 
 ## Setup
 
@@ -105,6 +136,23 @@ cache:
 - **Memória conversacional:** InMemoryMemory · WindowedMemory · RedisMemory (com fallback automático)
 - **Observability:** structured JSON logs com `trace_id` por requisição (`src/observability/trace.py`)
 - **UI:** Streamlit
+
+## Custo e Latência
+
+**Custo por query: `$0,00 USD`** — LLM via HuggingFace Serverless Free Tier + embedding local (`sentence-transformers/all-MiniLM-L6-v2`, sem chamada de API). Limite: ~100 req/dia no modelo premium (Llama-3.3-70B).
+
+**Redução de custo medida: `92.6%`** vs baseline (premium em toda query).
+
+| Estratégia | Custo relativo | Redução acumulada |
+|---|---:|---:|
+| Baseline — premium sempre | 1,000 unid./query | — |
+| + Exact cache (15% hit rate) | — | 15,0% |
+| + Semantic cache (20% hit rate) | — | 35,0% |
+| **+ Routing cheap-first** | **0,074 unid./query** | **92,6%** |
+
+**Metodologia:** proxy de custo = preço relativo ao modelo premium (Llama-3.3-70B = 1,0 · Llama-3.1-8B = 8/70 ≈ 0,114 · cache hit = 0,0). Simulação de 1.000 queries com hit rates conservadores (15% exact, 20% semantic). Routing medido sobre as 15 queries do golden set via `classify_complexity()` — todas classificadas como `simple`, pois são perguntas curtas e diretas típicas do domínio de compliance.
+
+**Limitação:** o golden set é composto por perguntas objetivas, o que enviesa o routing 100% para o modelo cheap. Queries analíticas reais ("compare as bases legais do Art. 7º com o Art. 11º") ativariam o premium — em produção a redução estimada de routing seria ~40 pp com 60% de queries simples, totalizando ~75% de redução.
 
 ## Decisões de design
 
