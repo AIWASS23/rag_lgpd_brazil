@@ -1,0 +1,40 @@
+chunking:
+  tokenizer_source: tiktoken    # tiktoken | huggingface
+  tokenizer_model: cl100k_base  # tiktoken: cl100k_base | p50k_base | r50k_base | gpt2 # huggingface: ex. neuralmind/bert-base-portuguese-cased
+  chunk_size: 512               # tamanho do chunk em tokens
+  chunk_overlap: 50             # sobreposição entre chunks em tokens
+
+embedding:
+  provider: huggingface              # gemini | openai | huggingface
+  model: sentence-transformers/all-MiniLM-L6-v2   
+
+  # gemini: gemini-embedding-001
+  # openai: text-embedding-3-small
+  # huggingface: sentence-transformers/all-MiniLM-L6-v2
+
+llm:
+  provider: huggingface             # gemini | openai | huggingface
+  cheap_model: meta-llama/Llama-3.1-8B-Instruct
+  premium_model: meta-llama/Llama-3.3-70B-Instruct
+  temperature: 0.1
+  max_tokens: 1024
+
+retriever:
+  technique: similarity        # similarity | mmr | hybrid
+  top_k: 10
+  mmr_lambda: 0.5              # relevância vs diversidade — só para technique: mmr
+  score_threshold: 0.3         # filtro mínimo de score (0.0 = sem filtro)
+
+memory:
+  technique: in_memory         # redis | in_memory | windowed  (redis requer infra separada)
+  redis_url: redis://localhost:6379
+  redis_ttl_seconds: 3600      # TTL das sessões no Redis (1 hora)
+  window_size: 10              # últimas N mensagens mantidas (redis e windowed)
+  session_prefix: lgpd_chat
+
+cache:
+  exact:
+    enabled: true
+  semantic:
+    enabled: true
+    threshold: 0.93
