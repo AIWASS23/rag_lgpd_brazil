@@ -9,7 +9,7 @@ __pycache__/
 
 
 # Dados e cache
-data/chroma/
+# data/chroma/  — commitado para evitar re-indexação no Streamlit Cloud
 data/cache/
 *.log
 
