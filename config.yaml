@@ -5,17 +5,17 @@ chunking:
   chunk_overlap: 50             # sobreposição entre chunks em tokens
 
 embedding:
-  provider: huggingface              # gemini | openai | huggingface
-  model: sentence-transformers/all-MiniLM-L6-v2   
+  provider: gemini              # gemini | openai | huggingface
+  model: gemini-embedding-001   
 
   # gemini: gemini-embedding-001
   # openai: text-embedding-3-small
   # huggingface: sentence-transformers/all-MiniLM-L6-v2
 
 llm:
-  provider: huggingface             # gemini | openai | huggingface
-  cheap_model: meta-llama/Llama-3.1-8B-Instruct
-  premium_model: meta-llama/Llama-3.3-70B-Instruct
+  provider: gemini             # gemini | openai | huggingface
+  cheap_model: gemini-2.5-flash-lite
+  premium_model: gemini-2.5-pro
   temperature: 0.1
   max_tokens: 1024
 
