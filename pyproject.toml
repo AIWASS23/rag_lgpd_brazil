@@ -1,5 +1,5 @@
 [project]
-name = "RAG LGPD BRAZIL"
+name = "rag-lgpd-brazil"
 version = "0.1.0"
 description = "Rag para consulta de perguntas sobre a LGPD"
 readme = "README.md"
@@ -25,6 +25,11 @@ dev = [
     "pytest>=8.0",
     "ruff>=0.6",
     "nbval>=0.11",
+]
+eval = [
+    "ragas>=0.2,<0.3",
+    "langchain-openai>=0.1",
+    "langchain-huggingface>=0.1",
 ]
 huggingface = [
     "sentence-transformers>=3.0",  # embedding local (SentenceTransformerEmbeddingFunction)

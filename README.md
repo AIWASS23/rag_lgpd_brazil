@@ -120,6 +120,38 @@ cache:
 - Embeddings HuggingFace rodam localmente — o primeiro uso baixa ~100 MB do modelo.
 - O cache semântico não persiste entre reinícios do app (backend in-memory padrão).
 
+## Avaliação RAGAS
+
+O script `scripts/eval_ragas.py` avalia o pipeline contra um golden set de 15 perguntas LGPD (`data/golden_set.json`) e reporta três métricas:
+
+| Métrica | O que mede |
+|---|---|
+| `faithfulness` | Resposta fundamentada no contexto recuperado (sem alucinação) |
+| `answer_relevancy` | Resposta pertinente à pergunta feita |
+| `context_precision` | Contexto recuperado relevante para responder a pergunta |
+
+```bash
+# 1. Instalar dependências de avaliação
+uv sync --extra eval
+
+# 2. Garantir que o corpus já foi baixado e indexado
+python scripts/download_corpus.py
+
+# 3. Rodar avaliação (usa o provider configurado no .env)
+python scripts/eval_ragas.py
+
+# 4. Salvar resultados detalhados por query em CSV (opcional)
+python scripts/eval_ragas.py --output results/ragas_eval.csv
+```
+
+O script detecta automaticamente o provider via `.env` (prioridade: `GEMINI_API_KEY` → `OPENAI_API_KEY` → `HF_TOKEN`). Com `HF_TOKEN`, o LLM de avaliação usa o HuggingFace router e os embeddings rodam localmente via sentence-transformers — sem custo de API para embeddings.
+
+A saída final imprime os valores no formato exigido para entrega:
+
+```
+faithfulness=0.XX, answer_relevancy=0.XX, context_precision=0.XX
+```
+
 ## Observabilidade
 
 O módulo `src/observability/trace.py` emite JSON estruturado para stdout com `trace_id`, `event`, `latency_ms` e campos adicionais por requisição. Para integração com Langfuse (dashboard de traces, custo e latência em produção), veja `docs/observability.md`.
@@ -131,7 +163,8 @@ RAG_LGPD_BRAZIL/
 ├── data/
 │   ├── corpus/           # PDFs oficiais (download_corpus.py)
 │   ├── chroma/           # vector store persistido (gitignored)
-│   └── lgpd_articles.json
+│   ├── lgpd_articles.json
+│   └── golden_set.json   # 15 queries LGPD com respostas de referência (RAGAS)
 ├── src/
 │   ├── pipeline/
 │   │   ├── rag.py        # RAGPipeline — ingest, retrieve, answer
@@ -142,7 +175,9 @@ RAG_LGPD_BRAZIL/
 │   │   └── config_loader.py
 │   ├── observability/trace.py
 │   └── ui/streamlit_app.py
-├── scripts/download_corpus.py
+├── scripts/
+│   ├── download_corpus.py
+│   └── eval_ragas.py     # avaliação RAGAS (faithfulness / answer_relevancy / context_precision)
 ├── tests/test_smoke.py
 ├── config.yaml
 └── .env.example

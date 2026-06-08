@@ -1,0 +1,62 @@
+[
+  {
+    "question": "Qual é o objetivo da LGPD?",
+    "reference": "A LGPD tem por objetivo proteger os direitos fundamentais de liberdade e de privacidade e o livre desenvolvimento da personalidade da pessoa natural, disciplinando o tratamento de dados pessoais por pessoa natural ou jurídica de direito público ou privado (Art. 1º da Lei 13.709/2018)."
+  },
+  {
+    "question": "Quais são os princípios que regem o tratamento de dados pessoais segundo a LGPD?",
+    "reference": "Os princípios são: finalidade (propósitos legítimos, específicos e explícitos), adequação (compatibilidade com as finalidades), necessidade (mínimo necessário), livre acesso, qualidade dos dados, transparência, segurança, prevenção, não discriminação, e responsabilização e prestação de contas (Art. 6º)."
+  },
+  {
+    "question": "O que são dados pessoais sensíveis segundo a LGPD?",
+    "reference": "Dados pessoais sensíveis são dados sobre origem racial ou étnica, convicção religiosa, opinião política, filiação a sindicato ou organização de caráter religioso, filosófico ou político, dado referente à saúde ou à vida sexual, dado genético ou biométrico, quando vinculado a uma pessoa natural (Art. 5º, II)."
+  },
+  {
+    "question": "Quais são as bases legais para o tratamento de dados pessoais?",
+    "reference": "As bases legais são: consentimento do titular, cumprimento de obrigação legal ou regulatória, execução de políticas públicas, realização de estudos por órgão de pesquisa, execução de contrato, exercício regular de direitos, proteção da vida, tutela da saúde, legítimo interesse do controlador ou de terceiro, e proteção ao crédito (Art. 7º)."
+  },
+  {
+    "question": "O que é necessário para que o consentimento seja considerado válido pela LGPD?",
+    "reference": "O consentimento deve ser manifestação livre, informada e inequívoca pela qual o titular concorda com o tratamento de seus dados pessoais para finalidades determinadas. Em contratos de adesão, deve ter destaque. O ônus da prova do consentimento é do controlador. O consentimento pode ser revogado a qualquer momento (Art. 7º, I e Art. 8º)."
+  },
+  {
+    "question": "Quando é permitido o tratamento de dados pessoais sensíveis?",
+    "reference": "O tratamento de dados sensíveis é permitido com consentimento específico e destacado do titular para finalidades específicas, ou sem consentimento para: cumprimento de obrigação legal, execução de políticas públicas, estudos por órgão de pesquisa (garantido o anonimato), exercício regular de direitos, proteção da vida ou incolumidade física, tutela da saúde por profissional de saúde, e prevenção a fraudes (Art. 11)."
+  },
+  {
+    "question": "Quais são os direitos dos titulares de dados pessoais previstos na LGPD?",
+    "reference": "Os titulares têm direito a: confirmação de existência de tratamento; acesso aos dados; correção de dados incompletos, inexatos ou desatualizados; anonimização, bloqueio ou eliminação de dados desnecessários ou excessivos; portabilidade; eliminação dos dados tratados com consentimento; informação sobre compartilhamento; informação sobre possibilidade de não consentir; revogação do consentimento; e revisão de decisões automatizadas (Art. 18)."
+  },
+  {
+    "question": "Quem é o encarregado pelo tratamento de dados pessoais e qual é seu papel?",
+    "reference": "O encarregado (DPO) é a pessoa indicada pelo controlador para aceitar reclamações e comunicações dos titulares, prestar esclarecimentos, receber comunicações da ANPD, orientar os funcionários sobre as práticas de proteção de dados e executar as demais atribuições determinadas pelo controlador ou em normas complementares (Art. 41)."
+  },
+  {
+    "question": "O que o controlador deve fazer em caso de incidente de segurança com dados pessoais?",
+    "reference": "O controlador deve comunicar à ANPD e ao titular a ocorrência de incidente de segurança que possa acarretar risco ou dano relevante aos titulares, em prazo razoável. A comunicação deve mencionar a natureza dos dados afetados, as informações sobre os titulares envolvidos, as medidas técnicas e de segurança utilizadas e os riscos relacionados ao incidente (Art. 48)."
+  },
+  {
+    "question": "Quais são as sanções administrativas previstas na LGPD para infrações?",
+    "reference": "As sanções incluem: advertência com prazo para adoção de medidas corretivas; multa simples de até 2% do faturamento da empresa no seu último exercício, limitada a R$ 50 milhões por infração; multa diária; publicização da infração; bloqueio dos dados pessoais; e eliminação dos dados pessoais (Art. 52)."
+  },
+  {
+    "question": "O que é o relatório de impacto à proteção de dados pessoais (RIPD)?",
+    "reference": "O RIPD é a documentação do controlador que descreve os processos de tratamento de dados pessoais que podem gerar riscos às liberdades civis e aos direitos fundamentais, bem como medidas, salvaguardas e mecanismos de mitigação de risco. A ANPD pode solicitar sua elaboração ao controlador (Art. 5º, XVII e Art. 38)."
+  },
+  {
+    "question": "Quais são as atribuições da ANPD (Autoridade Nacional de Proteção de Dados)?",
+    "reference": "A ANPD tem atribuições de: zelar pela proteção de dados pessoais; elaborar diretrizes para a Política Nacional de Proteção de Dados; fiscalizar e aplicar sanções; promover ações educativas; estimular padrões técnicos; deliberar sobre interpretação da LGPD; realizar auditorias; editar regulamentos; comunicar infrações penais; articular-se com autoridades de outros países (Art. 55-J)."
+  },
+  {
+    "question": "Quais medidas de segurança técnicas e administrativas os agentes de tratamento devem adotar?",
+    "reference": "Os agentes de tratamento devem adotar medidas de segurança, técnicas e administrativas aptas a proteger os dados pessoais de acessos não autorizados e de situações acidentais ou ilícitas de destruição, perda, alteração, comunicação ou difusão. A ANPD poderá dispor sobre padrões técnicos mínimos para segurança dos dados (Art. 46)."
+  },
+  {
+    "question": "O que é o legítimo interesse como base legal para tratamento de dados e quais são seus requisitos?",
+    "reference": "O legítimo interesse permite o tratamento de dados para finalidades legítimas do controlador ou de terceiro, desde que não prevaleçam os interesses ou direitos e liberdades fundamentais do titular. O tratamento deve se limitar ao mínimo necessário, e o controlador deve adotar medidas para garantir a transparência. Não se aplica a dados sensíveis (Art. 10)."
+  },
+  {
+    "question": "Como os guias da ANPD orientam sobre a responsabilidade dos agentes de tratamento?",
+    "reference": "Os guias da ANPD orientam que os agentes de tratamento (controlador e operador) devem ser identificados claramente, com seus papéis e responsabilidades definidos. O controlador toma as decisões sobre o tratamento, enquanto o operador realiza o tratamento em nome do controlador. Ambos devem adotar medidas de segurança, transparência e garantir os direitos dos titulares, sendo solidariamente responsáveis em caso de dano."
+  }
+]
